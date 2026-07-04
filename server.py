@@ -32,13 +32,14 @@ class RawDataProtocol(asyncio.Protocol):
             return
 
         insert_data(data)
-        preview = data[:32].hex(" ", 1)
+        text = data.decode(errors="replace")
+        preview = text[:80]
         logger.info(
             "Logged %d bytes from %s: %s%s",
             len(data),
             self._transport.get_extra_info("peername"),
             preview,
-            "..." if len(data) > 32 else "",
+            "..." if len(text) > 80 else "",
         )
 
     def connection_lost(self, exc: Exception | None) -> None:
