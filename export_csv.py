@@ -15,11 +15,12 @@ def export_csv(db_path: str, output: str) -> None:
 
     fh = open(output, "w", newline="") if output else sys.stdout
     writer = csv.writer(fh)
-    writer.writerow(["id", "received_at", "received_at_iso", "data_hex", "data_len"])
+    writer.writerow(["id", "received_at", "received_at_iso", "data", "data_len"])
 
     for row_id, ts, data in rows:
         dt = datetime.fromtimestamp(ts, tz=UTC).isoformat()
-        writer.writerow([row_id, ts, dt, data.hex(), len(data)])
+        text = data.decode(errors="replace")
+        writer.writerow([row_id, ts, dt, text, len(text)])
 
     if output:
         print(f"Exported {len(rows)} rows to {output}")
